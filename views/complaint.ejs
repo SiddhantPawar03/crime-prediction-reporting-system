@@ -1,0 +1,40 @@
+
+
+<h1>File Complaint</h1>
+
+<form method="post" action="/complaint">
+<div id="date">
+    <label>Select Date</label>
+    <input type="date" id="date" name="date" required/>
+</div>
+<!-- <div id="category">
+    <input type="radio" name="male"/>WARRANTS
+    <input type="radio" name="male"/>OTHER OFFENSES
+    <input type="radio" name="male"/>LARCENY/THEFT
+</div> -->
+<div id="day">
+    <label>Day of Week</label>
+    <select name="days" id="days">
+        <option value="monday">Monday</option>
+        <option value="tuesday">Tuesday</option>
+        <option value="wednesday">Wednesday</option>
+        <option value="thursday">Thursday</option>
+        <option value="friday">Friday</option>
+        <option value="saturday">Saturday</option>
+        <option value="sunday">Sunday</option>
+    </select>
+</div>
+<div id="district">
+    <label>Enter District</label>
+    <input type="text" name="district" id="district" required/>
+</div>
+<div id="address">
+    <label>Address</label>
+    <textarea id="address" name="address" rows="4" cols="50" placeholder="Enter Address here" required></textarea>
+</div>
+<div id="coords">
+    X-Coordinates<input type="number" id="xcoord" name="xcoord" required/>
+    Y-Coordinates<input type="number" id="ycoord" name="ycoord" required/>
+</div>
+<button type="submit" value="submit">Submit</button>
+</form>

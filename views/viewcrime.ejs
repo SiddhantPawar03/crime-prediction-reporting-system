@@ -1,0 +1,13 @@
+<h1><%=listTitle%></h1>
+
+<p><%-item[0]%></p>
+  <%  for(var i=0;i<10;i++) { %>
+    <div class="item">
+        <p><%=item[i].dates%></p>
+        <p><%=item[i].Address%></p>
+    </div>
+
+   <% item.forEach(function(items) { %>
+      <p><%=items.dates%></p>
+   <% })%>
+      <%  } %>
