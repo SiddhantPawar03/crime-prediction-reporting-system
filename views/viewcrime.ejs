@@ -1,13 +1,44 @@
-<h1><%=listTitle%></h1>
+<h1>
+      <%=listTitle%>
+</h1>
 
-<p><%-item[0]%></p>
-  <%  for(var i=0;i<10;i++) { %>
-    <div class="item">
-        <p><%=item[i].dates%></p>
-        <p><%=item[i].Address%></p>
-    </div>
+<table>
+      <tr>
+            <th>Sr. No.</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Day</th>
+            <th>District</th>
+            <th>Address</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+      </tr>
+      <% item.forEach(function(items) { %>
+            <tr>
+                  <td>1</td>
+                  <td>
+                        <%=items.date%>
+                  </td>
+                  <td>
+                        <%=items.time%>
+                  </td>
+                  <td>
+                        <%=items.day%>
+                  </td>
+                  <td>
+                        <%=items.district%>
+                  </td>
+                  <td>
+                        <%=items.address%>
+                  </td>
+                  <td>
+                        <%=items.xcoord%>
+                  </td>
+                  <td>
+                        <%=items.ycoord%>
+                  </td>
+            </tr>
 
-   <% item.forEach(function(items) { %>
-      <p><%=items.dates%></p>
-   <% })%>
-      <%  } %>
+
+            <% })%>
+</table>
