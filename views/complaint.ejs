@@ -1,56 +1,47 @@
+<% layout('/layouts/boilerplate') %>
 
 
-<h1>File Complaint</h1>
-
-<form method="post" action="/complaint">
-<div id="date">
-    <label>Select Date</label>
-    <input type="date" id="date" name="date" required/>
-</div>
-<!-- <div id="category">
-    <input type="radio" name="male"/>WARRANTS
-    <input type="radio" name="male"/>OTHER OFFENSES
-    <input type="radio" name="male"/>LARCENY/THEFT
-</div> -->
-<!-- <div id="day">
-    <label>Day of Week</label>
-    <select name="days" id="days">
-        <option value="Monday">Monday</option>
-        <option value="Tuesday">Tuesday</option>
-        <option value="Wednesday">Wednesday</option>
-        <option value="Thursday">Thursday</option>
-        <option value="Friday">Friday</option>
-        <option value="Saturday">Saturday</option>
-        <option value="Sunday">Sunday</option>
-    </select>
-</div> -->
-<div id="district">
-    <label>Enter District</label>
-    <input type="text" name="district" id="district" required/>
-</div>
-<div id="address">
-    <label>Address</label>
-    <textarea id="address" name="address" rows="2" cols="25" placeholder="Enter Address here" required></textarea>
-</div>
-<div id="complaint">
-    <label>Complaint</label>
-    <div id="day">
-    <label>Complaint Type</label>
-    <select name="days" id="days">
-        <option value="murder">Murder</option>
-        <option value="dowry">Dowry</option>
-        <option value="suicide">Suicide</option>
-        <option value="humantrafficking ">Human Trafficking</option>
-        <option value="blackmailing">Blacmailing</option>
-        <option value="robbery">Robbery</option>
-        <option value="fakenews">Fake News</option>
-    </select>
-</div>
-    <textarea id="compaint" name="compaint" rows="4" cols="50" placeholder="Enter Complaint here" required></textarea>
-</div>
-<!-- <div id="coords">
-    X-Coordinates<input type="number" step="0.00000000001" id="xcoord" name="xcoord" required/>
-    Y-Coordinates<input type="number" step="0.00000000001" id="ycoord" name="ycoord" required/>
-</div> -->
-<button type="submit" value="submit">Submit</button>
-</form>
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col-md-8 offset-md-2  col-xl-6 offset-xl-3">
+                <div class="card shadow">
+                    <img src="https://www.deccanherald.com/sites/dh/files/styles/article_detail/public/articleimages/2022/09/06/istock-468594877-1-1115789-1654516103-1142738-1662467839.jpg?itok=fojj8WY2"
+                        alt="" class="card-img-top" />
+                    <div class="card-body">
+                        <h4 class="card-title">Add Complaint</h4>
+                        <form class="needs-validation form" action="/complaint" method="post" novalidate>
+                            <div class="mb-3">
+                                <label class="form-label" for="date">Date</label>
+                                <input class="form-control" type="date" id="date" name="date" required
+                                    autofocus>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="district">District</label>
+                                <input class="form-control" type="text" id="district" name="district" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="address">Address</label>
+                                <input class="form-control" type="text" id="address" name="address" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="complaintType">Complaint Type</label>
+                                <select class="form-control" name="complaintType" id="complaintType">
+                                    <option value="murder">Murder</option>
+                                    <option value="dowry">Dowry</option>
+                                    <option value="suicide">Suicide</option>
+                                    <option value="humantrafficking ">Human Trafficking</option>
+                                    <option value="blackmailing">Blacmailing</option>
+                                    <option value="robbery">Robbery</option>
+                                    <option value="fakenews">Fake News</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="description">Descripe Crime</label>
+                                <input class="form-control" type="password" id="description" name="description" required>
+                            </div>
+                            <button class="btn btn-success w-100">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
