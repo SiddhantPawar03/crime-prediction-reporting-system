@@ -4,6 +4,7 @@ const ejs = require('ejs');
 const _ = require('lodash');
 const mongoose = require('mongoose');
 const { forEach } = require('lodash');
+require('dotenv').config();
 
 const app = express();
 
@@ -13,7 +14,7 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost:27017/crimeDB", {useNewUrlParser: true});
+mongoose.connect(process.env.MONGODB_URL, {useNewUrlParser: true});
 
 
 const crimeSchema = {
