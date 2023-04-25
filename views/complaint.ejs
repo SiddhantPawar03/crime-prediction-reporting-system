@@ -12,7 +12,7 @@
     <input type="radio" name="male"/>OTHER OFFENSES
     <input type="radio" name="male"/>LARCENY/THEFT
 </div> -->
-<div id="day">
+<!-- <div id="day">
     <label>Day of Week</label>
     <select name="days" id="days">
         <option value="Monday">Monday</option>
@@ -23,18 +23,34 @@
         <option value="Saturday">Saturday</option>
         <option value="Sunday">Sunday</option>
     </select>
-</div>
+</div> -->
 <div id="district">
     <label>Enter District</label>
     <input type="text" name="district" id="district" required/>
 </div>
 <div id="address">
     <label>Address</label>
-    <textarea id="address" name="address" rows="4" cols="50" placeholder="Enter Address here" required></textarea>
+    <textarea id="address" name="address" rows="2" cols="25" placeholder="Enter Address here" required></textarea>
 </div>
-<div id="coords">
+<div id="complaint">
+    <label>Complaint</label>
+    <div id="day">
+    <label>Complaint Type</label>
+    <select name="days" id="days">
+        <option value="murder">Murder</option>
+        <option value="dowry">Dowry</option>
+        <option value="suicide">Suicide</option>
+        <option value="humantrafficking ">Human Trafficking</option>
+        <option value="blackmailing">Blacmailing</option>
+        <option value="robbery">Robbery</option>
+        <option value="fakenews">Fake News</option>
+    </select>
+</div>
+    <textarea id="compaint" name="compaint" rows="4" cols="50" placeholder="Enter Complaint here" required></textarea>
+</div>
+<!-- <div id="coords">
     X-Coordinates<input type="number" step="0.00000000001" id="xcoord" name="xcoord" required/>
     Y-Coordinates<input type="number" step="0.00000000001" id="ycoord" name="ycoord" required/>
-</div>
+</div> -->
 <button type="submit" value="submit">Submit</button>
 </form>

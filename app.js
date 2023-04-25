@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const ejs = require('ejs');
 const _ = require('lodash');
 const mongoose = require('mongoose');
+const { forEach } = require('lodash');
 
 const app = express();
 
@@ -22,11 +23,13 @@ const crimeSchema = {
     time: String,
     district: String,
     address: String,
+    complaint_type: String,
+    complaint: String,
     xcoord: Number,
     ycoord: Number
 };
 
-const Crime = mongoose.model("Post", crimeSchema);
+const Crime = mongoose.model("complaints", crimeSchema);
 
 
 app.get("/", function(req,res) {
@@ -47,16 +50,41 @@ app.post("/complaint", function(req,res) {
     var currentTime = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
     return currentTime;
   }
+
+  function getday() {
+    var currentdate = req.body.date;
+    const dt = new Date(currentdate);
+    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday","Friday","Saturday"];
+    var currentday = dt.getDay();
+    currentday = dayNames[currentday];
+    return currentday;
+  }
+
+  function lat(position) {
+    const latitude = position.coords.latitude;
+     return latitude;
+  }
+
+  function lon(position) {
+    const longitude = position.coords.longitude;
+    return longitude;
+  }
+ 
+  function findCoords() {
+    const apiKey = process.env.MAP_API;
+    console.log(apiKey);
+  }
+
     const complaint = new Crime({
         date: req.body.date,
-        day: req.body.days,
         time: getTime(),
+        day: getday(),
         district: req.body.district,
         address: req.body.address,
         xcoord: req.body.xcoord,
         ycoord: req.body.ycoord
     });
-
+    findCoords();
     complaint.save(function(err) {
         if(!err) {
             res.redirect("/complaint");
@@ -69,10 +97,12 @@ app.post("/complaint", function(req,res) {
 
 app.get("/viewcrime", async (req, res) => {
     try {
-      const details = await Crime.find({ });
+      const details = await Crime.find();
+      console.log('start')
+      console.log(details);
+      console.log('end')
     //   res.send(articles);
       res.render("viewcrime", {listTitle: "Crime Report", 'item': details});
-      console.log(details);
     } catch (err) {
       console.log(err);
     }
@@ -88,6 +118,105 @@ app.get("/viewcrime", async (req, res) => {
     });
   });
 
+  const reportSchema = {
+    date: String,
+    Category: String,
+    Descript: String,
+    DayOfWeek: String,
+    PdDistrict: String,
+    Resolution: String,
+    Address: String,
+    X: String,
+    Y: String
+};
+
+  const Report = mongoose.model("reports", reportSchema);
+app.get("/viewreport", async (req, res) => {
+  // function searchResults(reports) {
+  //     var search = req.body.report;
+  //     // console.log(report);
+  //     // var s1 = search.toString();
+  //     // var s2 = s1.toLowerCase();
+  //     console.log(search);
+  //     // var myCursor = report.reports.find( );
+  //     // myCursor.forEach(printjson);
+  //     console.log(Report.reports.find({"Category": {search }})) ;
+  // }
+  try {
+    const search = req.query.report;
+    // if(search === null || search === undefined){
+    //   search = "WARRANTS";
+    // }
+    // var search = "WARRANTS";
+    // search = String(search);
+    console.log(search);
+    const report = await Report.find({Category:search},{},{limit: 40});
+  //   res.send(articles);searchResults();    
+  // searchResults(report);
+res.render("viewreport", {'item': report});
+
+    console.log(report);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.post("/viewreport", function(req,res) {
+  const search = req.body.report;
+  console.log(search);
+  res.redirect("/viewreport");
+});
+
+const clusterSchema = {
+  state: String,
+  murder: String,
+  dowry : String,
+  suicide: String,
+  humantrafficiking: String,
+  blackmailing: String,
+  robbery: String,
+  coordinates: String,
+  latitude: String,
+  longitude: String
+};
+
+const Cluster = mongoose.model("clusters", clusterSchema);
+
+
+app.get("/viewcluster", async (req,res) => {
+  try {
+    const crime_type = req.query.crime;
+    // console.log(typeof(crime_type));
+    const cluster = await Cluster.find({});
+    // console.log(cluster);
+res.render("viewcluster", {'item': cluster,'crimetp':crime_type});
+  }
+  catch (err) {
+    console.log(err);
+  }
+});
+
+const predictSchema = {
+  State: String,
+  reports : [String]
+};
+
+const Predict = mongoose.model("predicts", predictSchema);
+
+app.get("/predict", async(req,res)=>{
+  try{
+    const list_type = req.query.crimetype;
+    const state = req.query.state;
+    // console.log(list_type);
+    console.log(state);
+    const values = await Predict.find({State: state});
+    console.log(values);
+    res.render("predict",{'item':values,'state':state});
+  }
+  catch(err){
+    console.log(err);
+  }
+});
 
 app.listen(process.env.PORT || 3000, function() {
    console.log("Server listening on Port 3000!"); 

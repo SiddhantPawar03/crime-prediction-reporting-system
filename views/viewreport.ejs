@@ -1,0 +1,31 @@
+<h1>View Statistical Report</h1>
+
+<form method="get" action="/viewreport">
+    <input type="text" name="report" id="report" placeholder="Enter report to view statistical" />
+    <button type="submit"  id="submit">Search</button>
+</form>
+
+
+
+<table>
+    <tr>
+        <th>Category</th>
+          <th>Latitude</th>
+          <th>Longitude</th>
+    </tr>
+    <% item.forEach(function(items) { %>
+          <tr>
+            <td>
+                <%=items.Category%>
+          </td>   
+            <td>
+                      <%=items.X%>
+                </td>
+                <td>
+                      <%=items.Y%>
+                </td>
+          </tr>
+
+
+          <% })%>
+</table>

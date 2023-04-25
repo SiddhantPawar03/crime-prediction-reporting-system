@@ -1,0 +1,40 @@
+<h1>View cluster in map</h1>
+
+<form method="get" action="/viewcluster">
+    <select name="crime" name="crime" id="crime">
+        <option value="murder">Murder</option>
+        <option value="dowry">Dowry</option>
+        <option value="suicide">Suicide</option>
+        <option value="humantrafficking ">Human Trafficking</option>
+        <option value="blackmailing">Blacmailing</option>
+        <option value="robbery">Robbery</option>
+        <option value="fakenews">Fake News</option>
+      </select>
+      <button type="submit" id="submit"> Submit</button>
+</form>
+<table>
+    <tr>
+        <th>State</th>
+        <th><%=crimetp%></th>
+          <th>Latitude</th>
+          <th>Longitude</th>
+    </tr>
+    <% item.forEach(function(items) { %>
+          <tr>
+            <td>
+                <%=items.state%>
+          </td>   
+          <td>
+            <%=items[crimetp]%>
+      </td> 
+            <td>
+                      <%=items.latitude%>
+                </td>
+                <td>
+                  <%=items.longitude%>
+            </td>
+          </tr>
+
+
+          <% })%>
+</table>
