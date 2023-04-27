@@ -4,6 +4,7 @@
   "description": "Following website would help to find out the crimes taken place according to places as well as help to register crimes.",
   "main": "app.js",
   "scripts": {
+    "start": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -17,6 +18,7 @@
     "loadash": "^1.0.0",
     "lodash": "^4.17.21",
     "mongoose": "^6.10.0",
+    "bcrypt": "^3.0.6",
     "mongoose-double": "^0.0.1"
   }
 }

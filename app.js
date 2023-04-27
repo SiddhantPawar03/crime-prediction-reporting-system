@@ -4,6 +4,7 @@ const ejs = require('ejs');
 const _ = require('lodash');
 const mongoose = require('mongoose');
 const { forEach } = require('lodash');
+// const userRouter = require('./views/routes/userRoutes');
 
 const app = express();
 
@@ -12,12 +13,15 @@ app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
+app.use(express.json());
+// app.use("/users", userRouter);
 
 mongoose.connect("mongodb://localhost:27017/crimeDB", {useNewUrlParser: true});
 
 
 const crimeSchema = {
     id: Number,
+    name: String,
     date: String,
     day: String,
     time: String,
@@ -76,6 +80,7 @@ app.post("/complaint", function(req,res) {
   }
 
     const complaint = new Crime({
+        name: req.body.name,
         date: req.body.date,
         time: getTime(),
         day: getday(),
@@ -92,6 +97,14 @@ app.post("/complaint", function(req,res) {
     });
 });
 
+app.get("/updatecomplaint", function(req,res) {
+  res.redirect("update");
+});
+app.post("/updatecomplaint", function(req,res) {
+  var uname = req.body.uname;
+  console.log(uname);
+  // res.redirect("update");
+});
 
 
 
@@ -188,7 +201,7 @@ app.get("/viewcluster", async (req,res) => {
     const crime_type = req.query.crime;
     // console.log(typeof(crime_type));
     const cluster = await Cluster.find({});
-    // console.log(cluster);
+    console.log(cluster);
 res.render("viewcluster", {'item': cluster,'crimetp':crime_type});
   }
   catch (err) {
