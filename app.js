@@ -4,7 +4,7 @@ const ejs = require('ejs');
 const _ = require('lodash');
 const mongoose = require('mongoose');
 const { forEach } = require('lodash');
-// const userRouter = require('./views/routes/userRoutes');
+const userRouter = require('./routes/userRoutes');
 
 const app = express();
 require('dotenv').config();
@@ -14,9 +14,14 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
 app.use(express.json());
-// app.use("/users", userRouter);
+app.use("/users", userRouter);
 
-mongoose.connect(process.env.MONGODB_URL, {useNewUrlParser: true})
+app.use((req,res, next)=>{
+  console.log('HTTP Method: ' + req.method);
+  next();
+});
+// process.env.MONGODB_URL
+mongoose.connect('mongodb://localhost:27017/crimeDB', {useNewUrlParser: true})
 .then(data => console.log("Database connected"))
 .catch(err => console.log("Database connection failed"))
 
@@ -195,7 +200,7 @@ const clusterSchema = {
   longitude: String
 };
 
-const Cluster = mongoose.model("clusters", clusterSchema);
+const Cluster = mongoose.model("cluster", clusterSchema);
 
 
 app.get("/viewcluster", async (req,res) => {
@@ -216,7 +221,7 @@ const predictSchema = {
   reports : [String]
 };
 
-const Predict = mongoose.model("predicts", predictSchema);
+const Predict = mongoose.model("predict", predictSchema);
 
 app.get("/predict", async(req,res)=>{
   try{
