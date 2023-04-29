@@ -2,7 +2,7 @@ const userModel = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-const SECRET_KEY = process.env.SECRET_KEY;
+const SECRET_KEY = "EDI@50";
 
 const signup = async(req,res) => {
     //Checking for existing user
@@ -13,7 +13,7 @@ const signup = async(req,res) => {
 
     //Token creation
 
-    const {username, email, password} = req.body;
+    const {userName, email, password} = req.body;
     try {
         const existingUser = await userModel.findOne({email:email});
         if(existingUser){
@@ -24,11 +24,11 @@ const signup = async(req,res) => {
         const result = await userModel.create({
             email:email,
             password:hashPassword,
-            username:username
+            userName:userName
         });
 
         const token = jwt.sign({email:result.email, id:result._id}, SECRET_KEY);
-        // res.status(201).json({user: result, token:token});
+        res.status(201).json({user: result, token:token});
         res.redirect('/login');
 
     }
@@ -53,7 +53,7 @@ const login = async (req,res) => {
         }
         const token = jwt.sign({email:existingUser.email, id:existingUser._id}, SECRET_KEY);
         // res.status(201).json({user: existingUser, token:token});
-        res.redirect('/login');
+        res.redirect('/complaint');
 
     }
     catch(err){

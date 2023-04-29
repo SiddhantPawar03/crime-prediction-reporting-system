@@ -5,6 +5,8 @@ const _ = require('lodash');
 const mongoose = require('mongoose');
 const { forEach } = require('lodash');
 const userController = require('./controllers/userController');
+const complaintController = require('./controllers/complaintController');
+const auth = require('./middlewares/auth');
 
 const app = express();
 require('dotenv').config();
@@ -16,7 +18,7 @@ app.use(express.static("public"));
 app.use(express.json());
 
 app.use((req,res, next)=>{
-  // console.log('HTTP Method: ' + req.method);
+  console.log('HTTP Method: ' + req.method + 'URL: ' + req.url);
   next();
 });
 // process.env.MONGODB_URL
@@ -44,65 +46,69 @@ app.get("/dashboard", function(req,res) {
     res.render("dashboard");
 });
 
-const Crime = require('./models/complaint');
+// const Crime = require('./models/complaint');
 app.get("/complaint", function(req,res) {
     res.render("complaint");
 });
 
-app.post("/complaint", function(req,res) {
-  function getTime() {
-    var date = new Date();
-    var currentTime = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-    return currentTime;
-  }
+app.post('/complaint', auth, complaintController.createComplaint);
 
-  function getday() {
-    var currentdate = req.body.date;
-    const dt = new Date(currentdate);
-    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday","Friday","Saturday"];
-    var currentday = dt.getDay();
-    currentday = dayNames[currentday];
-    return currentday;
-  }
+// app.put('/')
 
-  function lat(position) {
-    const latitude = position.coords.latitude;
-     return latitude;
-  }
+// app.post("/complaint", function(req,res) {
+//   function getTime() {
+//     var date = new Date();
+//     var currentTime = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+//     return currentTime;
+//   }
 
-  function lon(position) {
-    const longitude = position.coords.longitude;
-    return longitude;
-  }
+//   function getday() {
+//     var currentdate = req.body.date;
+//     const dt = new Date(currentdate);
+//     const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday","Friday","Saturday"];
+//     var currentday = dt.getDay();
+//     currentday = dayNames[currentday];
+//     return currentday;
+//   }
+
+//   function lat(position) {
+//     const latitude = position.coords.latitude;
+//      return latitude;
+//   }
+
+//   function lon(position) {
+//     const longitude = position.coords.longitude;
+//     return longitude;
+//   }
  
-  function findCoords() {
-    const apiKey = process.env.MAP_API;
-    console.log(apiKey);
-  }
+//   function findCoords() {
+//     const apiKey = process.env.MAP_API;
+//     console.log(apiKey);
+//   }
 
-  function getMail() {
-    return "abc@gail.com";
-  }
-    const complaint = new Crime({
-        fullname: req.body.fullname,
-        email: getMail(),
-        crimeDate: req.body.crimedate,
-        district: req.body.district,
-        address: req.body.address,
-        complaint_type: req.body.complaint_type,
-        complaint: req.body.complaint
-    });
-    // findCoords();
-    complaint.save(function(err) {
-        if(!err) {
-          console.log(complaint);
-            res.redirect("/complaint");
-        }
-        else if(err){
-          console.log(err);
-        }
-    });
-});
+//   function getMail() {
+//     return "abc@gail.com";
+//   }
+//     const complaint = new Crime({
+//         fullname: req.body.fullname,
+//         email: getMail(),
+//         crimeDate: req.body.crimedate,
+//         district: req.body.district,
+//         address: req.body.address,
+//         complaint_type: req.body.complaint_type,
+//         complaint: req.body.complaint
+//     });
+//     // findCoords();
+//     complaint.save(function(err) {
+//         if(!err) {
+//           console.log(complaint);
+//             res.redirect("/complaint");
+//         }
+//         else if(err){
+//           console.log(err);
+//         }
+//     });
+// });
 
 app.get("/updatecomplaint", function(req,res) {
   res.redirect("update");
