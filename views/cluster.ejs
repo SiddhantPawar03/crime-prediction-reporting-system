@@ -1,6 +1,6 @@
 <h1>View cluster in map</h1>
 
-<form method="get" action="/viewcluster">
+<form method="get" action="/cluster">
     <select name="crime" name="crime" id="crime">
         <option value="murder">Murder</option>
         <option value="dowry">Dowry</option>
@@ -12,10 +12,10 @@
       </select>
       <button type="submit" id="submit"> Submit</button>
 </form>
+<h2>Crime Type: <%=crimetp%></h2>
 <table>
     <tr>
         <th>State</th>
-        <th><%=crimetp%></th>
           <th>Latitude</th>
           <th>Longitude</th>
     </tr>

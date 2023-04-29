@@ -5,29 +5,12 @@
 <form method="post" action="/complaint">
     <div id="name">
         <label>Enter Full Name</label>
-        <input type="text" name="name" id="name" required/>
+        <input type="text" name="fullName" id="fullName" required/>
     </div>
-<div id="date">
+<div id="crimedate">
     <label>Select Date</label>
-    <input type="date" id="date" name="date" required/>
+    <input type="date" id="crimeDate" name="crimeDate" required/>
 </div>
-<!-- <div id="category">
-    <input type="radio" name="male"/>WARRANTS
-    <input type="radio" name="male"/>OTHER OFFENSES
-    <input type="radio" name="male"/>LARCENY/THEFT
-</div> -->
-<!-- <div id="day">
-    <label>Day of Week</label>
-    <select name="days" id="days">
-        <option value="Monday">Monday</option>
-        <option value="Tuesday">Tuesday</option>
-        <option value="Wednesday">Wednesday</option>
-        <option value="Thursday">Thursday</option>
-        <option value="Friday">Friday</option>
-        <option value="Saturday">Saturday</option>
-        <option value="Sunday">Sunday</option>
-    </select>
-</div> -->
 <div id="district">
     <label>Enter District</label>
     <input type="text" name="district" id="district" required/>
@@ -38,9 +21,9 @@
 </div>
 <div id="complaint">
     <label>Complaint</label>
-    <div id="day">
+    <div id="complaintType">
     <label>Complaint Type</label>
-    <select name="days" id="days">
+    <select name="complaintType" id="complaintType">
         <option value="murder">Murder</option>
         <option value="dowry">Dowry</option>
         <option value="suicide">Suicide</option>
@@ -50,11 +33,7 @@
         <option value="fakenews">Fake News</option>
     </select>
 </div>
-    <textarea id="compaint" name="compaint" rows="4" cols="50" placeholder="Enter Complaint here" required></textarea>
+    <textarea id="complaint" name="complaint" rows="4" cols="50" placeholder="Enter Complaint here" required></textarea>
 </div>
-<!-- <div id="coords">
-    X-Coordinates<input type="number" step="0.00000000001" id="xcoord" name="xcoord" required/>
-    Y-Coordinates<input type="number" step="0.00000000001" id="ycoord" name="ycoord" required/>
-</div> -->
 <button type="submit" value="submit">Submit</button>
 </form>

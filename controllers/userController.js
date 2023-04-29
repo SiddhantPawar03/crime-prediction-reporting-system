@@ -1,7 +1,8 @@
 const userModel = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const SECRET_KEY = "NOTESAPI";
+require('dotenv').config();
+const SECRET_KEY = process.env.SECRET_KEY;
 
 const signup = async(req,res) => {
     //Checking for existing user
@@ -27,7 +28,8 @@ const signup = async(req,res) => {
         });
 
         const token = jwt.sign({email:result.email, id:result._id}, SECRET_KEY);
-        res.status(201).json({user: result, token:token});
+        // res.status(201).json({user: result, token:token});
+        res.redirect('/login');
 
     }
     catch(err){
@@ -36,7 +38,7 @@ const signup = async(req,res) => {
     }
 }
 
-const signin = async (req,res) => {
+const login = async (req,res) => {
     const {email, password} = req.body;
 
     try{
@@ -50,8 +52,8 @@ const signin = async (req,res) => {
             return res.status(400).json({message: "Invalid Credentials"});
         }
         const token = jwt.sign({email:existingUser.email, id:existingUser._id}, SECRET_KEY);
-        res.status(201).json({user: existingUser, token:token});
-
+        // res.status(201).json({user: existingUser, token:token});
+        res.redirect('/login');
 
     }
     catch(err){
@@ -59,4 +61,4 @@ const signin = async (req,res) => {
         res.status(500).json({message: "Server error"});
     }
 }
-module.exports = {signup,signin};
+module.exports = {signup,login};
