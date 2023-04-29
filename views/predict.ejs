@@ -1,0 +1,32 @@
+<h1>Predict</h1>
+<form method="get" action="/predict">
+    <select name="crimetype" name="crimetype" id="crimetype">
+        <option value="ipc">IPC</option>
+        <option value="sll">SLL</option>
+      </select>
+      <select name="state" name="state" id="state">
+        <option value="Assam">Assam</option>
+        <option value="Bihar">Bihar</option>
+        <option value="Andhra Pradesh">Andhra Pradesh</option>
+      </select>
+      <button type="submit" id="submit"> Submit</button>
+</form> 
+
+<table>
+    <tr>
+        <th><%=state%></th>
+    </tr>
+
+    <% item.forEach(function(items) { %>
+          <tr>
+            <td>
+                <%=items.state%>
+          </td> 
+         <% items.reports.forEach(function(report) { %>
+                <%= report %>
+            <% }) %>
+          </tr>
+
+
+          <% })%>
+</table>
