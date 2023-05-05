@@ -17,7 +17,12 @@
                 <nav class="nav nav-masthead justify-content-center float-md-end">
                     <a class="nav-link active" aria-current="page" href="#">Home</a>
                     <a class="nav-link" href="/viewcrime">Dashboard</a>
-                    <a class="nav-link" href="/login">Login</a>
+                    <% if(!currentUser){ %> 
+                        <a class="nav-link" href="/login">LogIn</a>
+                        <a class="nav-link" href="/signup">Sign Up</a>
+                        <% }else{ %> 
+                        <a class="nav-link" href="/logout">Log Out</a>
+                        <% } %> 
                 </nav>
             </div>
         </header>

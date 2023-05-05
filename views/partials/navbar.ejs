@@ -13,7 +13,13 @@
           <a class="nav-link" href="/predict">Predicted Data</a>
         </div>
         <div class="navbar-nav ms-auto">
-          <a class="nav-link" href="/">LogIn</a>
+          <div class="navbar-nav ms-auto">
+            <% if(!currentUser){ %> 
+            <a class="nav-link" href="/login">LogIn</a>
+            <a class="nav-link" href="/signup">Sign Up</a>
+            <% }else{ %> 
+            <a class="nav-link" href="/logout">Log Out</a>
+            <% } %> 
         </div>
       </div>
     </div>

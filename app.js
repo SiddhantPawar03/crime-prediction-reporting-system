@@ -4,17 +4,30 @@ const ejsMate = require('ejs-mate')
 const path = require('path')
 const _ = require('lodash');
 const mongoose = require('mongoose');
+const session = require('express-session')
 const { forEach } = require('lodash');
+const flash = require('connect-flash')
+const MongoStore = require('connect-mongo');
 const cookieParser = require('cookie-parser');
 const userController = require('./controllers/userController');
 const complaintController = require('./controllers/complaintController');
 const expressLayouts = require('express-ejs-layouts');
-const auth = require('./middlewares/auth');
+const {auth,isLogedIn} = require('./middlewares/auth');
 
-
+const dbUrl = process.env.MONGODB_URL || 'mongodb://localhost:27017/crimeDB'
+const secret = process.env.SECRET_KEY
 require('dotenv').config();
 
 const app = express();
+
+const store = MongoStore.create({
+  mongoUrl: dbUrl,
+  secret,
+  touchAfter: 24*60*60
+})
+store.on('error',e => {
+  console.log('Session Error!!!',e)
+})
 
 app.engine('ejs',ejsMate);
 app.set('view engine','ejs');
@@ -22,6 +35,21 @@ app.set('views',path.join(__dirname,'views'));
 app.set('views', './views');
 app.set('view engine', 'ejs');
 
+const sessionConfig = {
+  store,
+  name: 'YelpCampSession',
+  secret,
+  resave:false,
+  saveUninitialized:true,
+  cookie:{
+      httpOnly:true,  //just a extra layer of security to avoid client site req / cross-plaform req
+      // secure: true,        //how extra security (sends no cookies for local host as well)
+      expires:Date.now() + (1000 * 60 * 60 * 24 * 7),     //expires after 1 week of creation
+      maxAge: (1000 * 60 * 60 * 24 * 7)
+  }
+}
+app.use(session(sessionConfig))
+app.use(flash())
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
 app.use(express.json());
@@ -30,9 +58,20 @@ app.use((req,res, next)=>{
   next();
 });
 
-mongoose.connect(process.env.MONGODB_URL || 'mongodb://localhost:27017/crimeDB', {useNewUrlParser: true})
+mongoose.connect(dbUrl, {useNewUrlParser: true})
 .then(data => console.log("Database connected"))
 .catch(err => console.log("Database connection failed"));
+
+
+//middleware for flashing all msg
+app.use((req,res,next)=>{
+  res.locals.currentUser = isLogedIn(req)
+  res.locals.success = req.flash('success')       //this will send success to all the rendering requests
+  res.locals.warning = req.flash('warning')
+  res.locals.error = req.flash('error')
+  next()
+})
+
 
 app.get("/", function(req,res) {
     res.render("home");
@@ -50,7 +89,7 @@ app.get("/signup", function(req,res) {
 
 app.post("/login", userController.login);
 
-app.get("/complaint", function(req,res) {
+app.get("/complaint",auth, function(req,res) {
   res.render("complaint");
 });
 
