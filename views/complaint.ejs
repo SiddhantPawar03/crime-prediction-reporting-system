@@ -11,9 +11,16 @@
                         <h4 class="card-title">Add Complaint</h4>
                         <form class="needs-validation form" action="/complaint" method="post" novalidate>
                             <div class="mb-3">
+                                <label class="form-label" for="fullName">Enter Full Name</label>
+                                <input class="form-control" type="text" name="fullName" id="fullName" required autofocus/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="fullName">Email</label>
+                                <input class="form-control" type="text" name="email" id="email" required autofocus/>
+                            </div>
+                            <div class="mb-3">
                                 <label class="form-label" for="date">Date</label>
-                                <input class="form-control" type="date" id="date" name="date" required
-                                    autofocus>
+                                <input class="form-control" type="date" id="crimeDate" name="crimeDate" required autofocus>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label" for="district">District</label>
@@ -36,8 +43,8 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label" for="description">Descripe Crime</label>
-                                <input class="form-control" type="password" id="description" name="description" required>
+                                <label class="form-label" for="description">Describe Crime</label>
+                                <textarea class="form-control" id="complaint" name="complaint" rows="4" cols="50" placeholder="Enter Complaint here" required></textarea>
                             </div>
                             <button class="btn btn-success w-100">Submit</button>
                         </form>
