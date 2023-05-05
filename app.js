@@ -6,6 +6,8 @@ const mongoose = require('mongoose');
 const { forEach } = require('lodash');
 const userController = require('./controllers/userController');
 const complaintController = require('./controllers/complaintController');
+const expressLayouts = require('express-ejs-layouts');
+const path = require('path');
 const auth = require('./middlewares/auth');
 
 const app = express();
@@ -53,62 +55,6 @@ app.get("/complaint", function(req,res) {
 
 app.post('/complaint', auth, complaintController.createComplaint);
 
-// app.put('/')
-
-// app.post("/complaint", function(req,res) {
-//   function getTime() {
-//     var date = new Date();
-//     var currentTime = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-//     return currentTime;
-//   }
-
-//   function getday() {
-//     var currentdate = req.body.date;
-//     const dt = new Date(currentdate);
-//     const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday","Friday","Saturday"];
-//     var currentday = dt.getDay();
-//     currentday = dayNames[currentday];
-//     return currentday;
-//   }
-
-//   function lat(position) {
-//     const latitude = position.coords.latitude;
-//      return latitude;
-//   }
-
-//   function lon(position) {
-//     const longitude = position.coords.longitude;
-//     return longitude;
-//   }
- 
-//   function findCoords() {
-//     const apiKey = process.env.MAP_API;
-//     console.log(apiKey);
-//   }
-
-//   function getMail() {
-//     return "abc@gail.com";
-//   }
-//     const complaint = new Crime({
-//         fullname: req.body.fullname,
-//         email: getMail(),
-//         crimeDate: req.body.crimedate,
-//         district: req.body.district,
-//         address: req.body.address,
-//         complaint_type: req.body.complaint_type,
-//         complaint: req.body.complaint
-//     });
-//     // findCoords();
-//     complaint.save(function(err) {
-//         if(!err) {
-//           console.log(complaint);
-//             res.redirect("/complaint");
-//         }
-//         else if(err){
-//           console.log(err);
-//         }
-//     });
-// });
 
 app.get("/updatecomplaint", function(req,res) {
   res.redirect("update");
@@ -151,6 +97,9 @@ const Cluster = require('./models/cluster');
 app.get("/cluster", async (req,res) => {
   try {
     const crime_type = req.query.crime;
+    let clusterpath = path.join(__dirname, 'clusters');
+    // res.render(`${clusterpath}/${crime_type}.ejs`);
+    // res.sendFile(`${clusterpath}/${crime_type}.ejs`);
     const cluster = await Cluster.find({});
     console.log(cluster);
 res.render("cluster", {'item': cluster,'crimetp':crime_type});

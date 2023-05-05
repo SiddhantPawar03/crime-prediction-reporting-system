@@ -8,6 +8,7 @@ const clusterSchema = {
     humantrafficiking: String,
     blackmailing: String,
     robbery: String,
+    fakeNews: String,
     coordinates: String,
     latitude: String,
     longitude: String

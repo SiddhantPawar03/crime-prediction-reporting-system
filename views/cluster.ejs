@@ -13,28 +13,27 @@
       <button type="submit" id="submit"> Submit</button>
 </form>
 <h2>Crime Type: <%=crimetp%></h2>
-<table>
-    <tr>
-        <th>State</th>
-          <th>Latitude</th>
-          <th>Longitude</th>
-    </tr>
-    <% item.forEach(function(items) { %>
-          <tr>
-            <td>
-                <%=items.state%>
-          </td>   
-          <td>
-            <%=items[crimetp]%>
-      </td> 
-            <td>
-                      <%=items.latitude%>
-                </td>
-                <td>
-                  <%=items.longitude%>
-            </td>
-          </tr>
 
+<button onclick='loadHTML("template","robbery.html")'>Click</button>
+<%  function loadHTML(id, filename) { %>
+<%  console.log(id, filename); %>
+<%    let xhttp; %>
+<%    let element = document.getElementById(id); %>
+<%   let file = filename; %>
 
-          <% })%>
-</table>
+<%   if(file) { %>
+<%      xhttp = new XMLHttprequest();%>
+<%      xhttp.onreadystatechange = function() {%>
+<%      if(this.readyState == 4) {%>
+<%          if(this.status == 200) {element.innerHTML = this.responsetext;}%>
+<%          if(this.status == 404) {element.innerHTML = "<h1>Page not found!</h1>";}%>
+<%      }%>
+<%    }%>
+<%    xhttp.open("GET", `/clusters/${file}`, true);%>
+<%      xhttp.send();%>
+<%      return;%>
+<%    }%>
+<% }%>
+
+<div id="template" class="template">
+</div>
