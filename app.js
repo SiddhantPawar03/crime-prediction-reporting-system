@@ -44,10 +44,6 @@ app.get("/signup", function(req,res) {
 
 app.post("/login", userController.login);
 
-app.get("/dashboard", function(req,res) {
-    res.render("dashboard");
-});
-
 // const Crime = require('./models/complaint');
 app.get("/complaint", function(req,res) {
     res.render("complaint");
@@ -74,7 +70,7 @@ app.get("/crime", async (req, res) => {
       console.log(details);
       console.log('end')
     //   res.send(articles);
-      res.render("viewcrime", {listTitle: "Crime Report", 'item': details});
+      res.render("crime", {listTitle: "Crime Report", 'item': details});
     } catch (err) {
       console.log(err);
     }
