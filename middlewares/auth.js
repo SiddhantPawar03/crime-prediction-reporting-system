@@ -1,23 +1,40 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-const SECRET_KEY = "EDI@50";
+const SECRET_KEY = process.env.SECRET_KEY;
 
 
-const auth = (req,res,next) => {
+
+module.exports.auth = (req,res,next) => {
     try {
         let token = req.cookies['jwt'];
         if(token){
             let user = jwt.verify(token, SECRET_KEY);
             req.userId = user.id;
+            req.flash('success','Login Successful')
             next();
         }
         else{
-            res.status(401).json({message: "Unauthorized user"});
+            req.flash('error','Please Login')
+            return res.redirect(`/login`)
         }
     }
     catch(err) {
-        res.status(401).json({message: "Unauthorized user"});
+        req.flash('error','Server Error')
+        return res.redirect(`/login`)
     }
 }
 
-module.exports = auth;
+
+module.exports.isLogedIn = (req) => {
+    try{
+        let token = req.cookies['jwt'];
+        if(token){
+            let user = jwt.verify(token, SECRET_KEY);
+            if (user) 
+            {return true}
+        }
+        return false
+    }catch(err){
+        return false
+    }
+}
