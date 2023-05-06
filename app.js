@@ -13,6 +13,7 @@ const userController = require('./controllers/userController');
 const complaintController = require('./controllers/complaintController');
 const expressLayouts = require('express-ejs-layouts');
 const {auth,isLogedIn} = require('./middlewares/auth');
+const Crime = require('./models/complaint')
 
 const dbUrl = process.env.MONGODB_URL || 'mongodb://localhost:27017/crimeDB'
 const secret = process.env.SECRET_KEY
@@ -95,7 +96,7 @@ app.get("/complaint",auth, function(req,res) {
 
 app.post('/complaint', auth, complaintController.createComplaint);
 
-app.get("/crime", async (req, res) => {
+app.get("/crime",auth, async (req, res) => {
     try {
       const details = await Crime.find();
       console.log('start')
