@@ -83,27 +83,45 @@ app.get("/crime", async (req, res) => {
 
   app.get("/cluster", async (req,res) => {
     try {
-      const crime_type = req.query.crime;
+      let crime_type = req.query.crime;
       let clusterpath = path.join(__dirname, 'clusters');
       // res.render(`${clusterpath}/${crime_type}.ejs`);
-      // res.sendFile(`${clusterpath}/${crime_type}.ejs`);
-      const cluster = await Cluster.find({});
-      console.log(cluster);
-  res.render("cluster", {'item': cluster,'crimetp':crime_type});
+      // res.render(`${clusterpath}/murder.ejs`);
+      // const cluster = await Cluster.find({});
+      // console.log(cluster);
+      // crime_type = dummy;
+    res.render("cluster");
+    console.log(crime_type);
+    res.redirect("map");  
+    // res.redirect(`./clusters/${crime_type}.ejs`);
     }
     catch (err) {
       console.log(err);
     }
   });
 
+// app.get("/cluster", getVal, renderForm);
+
+// function getVal(req, res, next) {
+//    // Code here
+//    res.locals.savedPayees = req.query.crime;
+//    next();
+// };
+
+// function renderForm(req, res) {
+//   res.render("cluster", {'crime': req.query.crime});
+// };
+
   const Predict = require('./models/predict');
 
   app.get("/predict", async(req,res)=>{
     try{
-      const list_type = req.query.crimetype;
-      const state = req.query.state;
-      const values = await Predict.find({State: state});
-      res.render("predict",{'item':values,'state':state});
+      var list_type = req.query.crimetype;
+      var state = req.query.state;
+      var model = list_type + state;
+      console.log(model);
+      // const values = await Predict.find({State: state});
+      res.render("predict",{'state':state});
     }
     catch(err){
       console.log(err);

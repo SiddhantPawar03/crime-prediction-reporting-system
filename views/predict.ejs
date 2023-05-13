@@ -1,32 +1,47 @@
 <h1>Predict</h1>
 <form method="get" action="/predict">
     <select name="crimetype" name="crimetype" id="crimetype">
-        <option value="ipc">IPC</option>
-        <option value="sll">SLL</option>
+        <option value="i">IPC</option>
+        <option value="s">SLL</option>
       </select>
       <select name="state" name="state" id="state">
-        <option value="Assam">Assam</option>
-        <option value="Bihar">Bihar</option>
-        <option value="Andhra Pradesh">Andhra Pradesh</option>
+        <option value="ap">Andhra Pradesh</option>
+        <option value="ar">Arunachal Pradesh</option>
+        <option value="as">Assam</option>
+        <option value="br">Bihar</option>
+        <option value="cg">Chhattisgarh</option>
+        <option value="ga">Goa</option>
+        <option value="gj">Gujarat</option>
+        <option value="hr">Haryana</option>
+        <option value="hp">Himachal Pradesh</option>
+        <option value="jk">Jammu and Kashmir</option>
+        <option value="jh">Jharkhand</option>
+        <option value="ka">Karnataka</option>
+        <option value="kl">Kerala</option>
+        <option value="mp">Madhya Pradesh</option>
+        <option value="mh">Maharashtra</option>
+        <option value="mn">Manipur</option>
+        <option value="ml">Meghalaya</option>
+        <option value="mz">Mizoram</option>
+        <option value="nl">Nagaland</option>
+        <option value="od">Odisha</option>
+        <option value="pb">Punjab</option>
+        <option value="rj">Rajasthan</option>
+        <option value="sk">Sikkim</option>
+        <option value="tn">Tamil Nadu</option>
+        <option value="tr">Tripura</option>
+        <option value="up">Uttar Pradesh</option>
+        <option value="uk">Uttarakhand</option>
+        <option value="wb">West Bengal	</option>
+        <option value="ts">Telangana</option>
+        <option value="an">Andaman & Nicobar Islands</option>
+        <option value="ch">Chandigarh</option>
+        <option value="dn">Dadar and Nagar Haveli</option>
+        <option value="dd">Daman and Diu</option>
+        <option value="ld">Lakshadweep</option>
+        <option value="dl">Delhi</option>
+        <option value="py">Puducherry</option>
+
       </select>
       <button type="submit" id="submit"> Submit</button>
 </form> 
-
-<table>
-    <tr>
-        <th><%=state%></th>
-    </tr>
-
-    <% item.forEach(function(items) { %>
-          <tr>
-            <td>
-                <%=items.state%>
-          </td> 
-         <% items.reports.forEach(function(report) { %>
-                <%= report %>
-            <% }) %>
-          </tr>
-
-
-          <% })%>
-</table>
