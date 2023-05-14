@@ -37,7 +37,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.Default.css"/>
 </head>
 <body>    
-    
+    <form method="get" action="/cluster">
+        <select name="crime" name="crime" id="crime">
+            <option value="murder">Murder</option>
+            <option value="dowry">Dowry</option>
+            <option value="suicide">Suicide</option>
+            <option value="humantrafficking ">Human Trafficking</option>
+            <option value="blackmailing">Blacmailing</option>
+            <option value="robbery">Robbery</option>
+            <option value="fakenews">Fake News</option>
+          </select>
+          <button type="submit" id="submit">Submit</button>
+    </form>
             <div class="folium-map" id="map_f5d0eb6979fe3222e07855cec7de2cb2" ></div>
         
 </body>

@@ -16,7 +16,7 @@ const {auth,isLogedIn} = require('./middlewares/auth');
 const Crime = require('./models/complaint')
 
 const dbUrl = process.env.MONGODB_URL || 'mongodb://localhost:27017/crimeDB'
-const secret = process.env.SECRET_KEY
+const secret = process.env.SECRET_KEY || "EDI@50";
 require('dotenv').config();
 
 const app = express();
@@ -123,17 +123,17 @@ app.get("/crime",auth, async (req, res) => {
 
   app.get("/cluster", async (req,res) => {
     try {
-      let crime_type = req.query.crime;
+      let crime_type = req.query.crime || "murder";
       let clusterpath = path.join(__dirname, 'clusters');
       // res.render(`${clusterpath}/${crime_type}.ejs`);
       // res.render(`${clusterpath}/murder.ejs`);
       // const cluster = await Cluster.find({});
       // console.log(cluster);
       // crime_type = dummy;
-    res.render("cluster");
+    // res.render("cluster");
     console.log(crime_type);
-    res.redirect("map");  
-    // res.redirect(`./clusters/${crime_type}.ejs`);
+    // res.redirect("map");  
+    res.render(`./clusters/${crime_type}.ejs`);
     }
     catch (err) {
       console.log(err);
