@@ -58,7 +58,7 @@ const login = async (req,res) => {
         // res.status(201).json({user: existingUser, token:token});
         res.cookie('jwt',token, { maxAge: 864000000 });
         req.flash('success','Welcome Back!')
-        res.redirect('/home');
+        res.redirect('/');
 
     }
     catch(err){
