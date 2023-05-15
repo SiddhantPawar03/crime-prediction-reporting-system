@@ -15,7 +15,6 @@ Develop a website which would assist to file complaints & predict upcoming crime
 ![Flowchart-Final](https://github.com/SiddhantPawar03/crime-prediction-reporting-system/assets/85052056/685e538c-c53d-4146-81d4-fcbdeeb2be97)
 
 # Results
-Title 
 | Title | Image    |
 --- | --- | 
 | Dashboard |<img width="960" alt="SS-1" src="https://github.com/SiddhantPawar03/crime-prediction-reporting-system/assets/85052056/4794380a-2269-46df-a1db-c4ca93869eec">|
