@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const predictSchema = {
+const sllSchema = {
     // state: {type:String,
     // required: true},
     // reports : [String]
@@ -8,4 +8,4 @@ const predictSchema = {
     reports : [String]
 };
 
-module.exports = mongoose.model("predict", predictSchema);
+module.exports = mongoose.model("sll", sllSchema);

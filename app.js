@@ -152,21 +152,111 @@ app.get("/crime",auth, async (req, res) => {
 //   res.render("cluster", {'crime': req.query.crime});
 // };
 
+  const Ipc = require('./models/ipc');
+  const Sll = require('./models/sll');
   const Predict = require('./models/predict');
+
+
+  var table = new Object();
+
+
+  table['ap'] = 'Andhra Pradesh';
+  table['ar'] = 'Arunachal Pradesh';
+  table['as'] = 'Assam';
+  table['br'] = 'Bihar';
+  table['cg'] = 'Chhattisgarh';
+  table['ga'] = 'Goa';
+  table['gj'] = 'Gujarat';
+  table['hr'] = 'Haryana';
+  table['hp'] = 'Himachal Pradesh';
+  table['jk'] = 'Jammu and Kashmir';
+  table['jh'] = 'Jharkhand';
+  table['ka'] = 'Karnataka';
+  table['kl'] = 'Kerala';
+  table['mp'] = 'Madhya Pradesh';
+  table['mh'] = 'Maharashtra';
+  table['mn'] = 'Manipur';
+  table['ml'] = 'Meghalaya';
+  table['mz'] = 'Mizoram';
+  table['nl'] = 'Nagaland';
+  table['od'] = 'Odisha';
+  table['pb'] = 'Punjab';
+  table['rj'] = 'Rajasthan';
+  table['sk'] = 'Sikkim';
+  table['tn'] = 'Tamil Nadu';
+  table['tr'] = 'Tripura';
+  table['up'] = 'Uttar Pradesh';
+  table['uk'] = 'Uttarakhand';
+  table['wb'] = 'West Bengal';
+  table['ts'] = 'Telangana';
+  table['an'] = 'Andaman & Nicobar Islands';
+  table['ch'] = 'Chandigarh';
+  table['dn'] = 'Dadar and Nagar Haveli';
+  table['dd'] = 'Daman and Diu';
+  table['ld'] = 'Lakshadweep';
+  table['dl'] = 'Delhi';
+  table['py'] = 'Puducherry';
+
+
+  function findKey(state) {
+    for (var key in table) {
+      if (table.hasOwnProperty(state)) {
+        console.log('key is: ' + key + ', value is: ' + table[key]);
+        return table[state];
+      }
+    }
+  }
+
+  function getValues(item){
+    var arr = [];
+    item.forEach(function(items){
+      items.reports.forEach(function(report){
+        // console.log(report);
+        arr.push(report);
+      })
+    })
+    return arr;
+  }
+
+  function getDateValue(arr) {
+    const datearr = ['2003-01-01','2004-01-01','2005-01-01','2006-01-01','2007-01-01','2008-01-01','2009-01-01','2010-01-01','2011-01-01','2012-01-01','2013-01-01','2014-01-01','2015-01-01','2016-01-01','2017-01-01','2018-01-01','2019-01-01', '2020-01-01'];
+    var res = [];
+    var dict = {};
+    for(var i=0;i<arr.length;i++) {
+      dict[datearr[i]] = arr[i];
+      res.push(dict);
+    }
+    return res;
+  }
 
   app.get("/predict", async(req,res)=>{
     try{
       var list_type = req.query.crimetype;
       var state = req.query.state;
+      var state_name = findKey(state);
       var model = list_type + state;
-      console.log(model);
-      // const values = await Predict.find({State: state});
+      if(list_type === "i"){
+        var ipcValue = await Ipc.find({State: state_name});
+        var ari = [];
+        ari = getValues(ipcValue);
+        var finalAri = [];
+        finalAri = getDateValue(ari);
+        console.log(finalAri);
+      } else{
+        var sllValue = await Sll.find({State: state_name});
+        var ars = [];
+        ars = getValues(sllValue);
+        var finalArs = [];
+        finalArs = getDateValue(ars);
+        console.log(finalArs);
+      }
       res.render("predict",{'state':state});
     }
     catch(err){
       console.log(err);
     }
   });
+
   
 
 app.listen(process.env.PORT || 3000, function() {
