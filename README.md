@@ -12,13 +12,20 @@ Develop a website which would assist to file complaints & predict upcoming crime
 - Predict upcoming crime rate for respective States & Union Territory based on Indian Penal Code (IPC) & Special & Local Laws (SLL).
 
 # System Architecture
+![Flowchart-Final](https://github.com/SiddhantPawar03/crime-prediction-reporting-system/assets/85052056/685e538c-c53d-4146-81d4-fcbdeeb2be97)
+
+
 
 # Results
 Title 
 | Title | Image    |
 | :---:   | :---: |
-| Seconds | 301   |
-
-
+| Dashboard | 301   |
+| :---:   | :---: |
+| File Complaints | 301   |
+| :---:   | :---: |
+| Cluster Map | 301   |
+| :---:   | :---: |
+| Prediction Graph | 301   |
 
 
