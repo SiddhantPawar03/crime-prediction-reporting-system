@@ -10,7 +10,6 @@ module.exports.auth = (req,res,next) => {
         if(token){
             let user = jwt.verify(token, SECRET_KEY);
             req.userId = user.id;
-            req.flash('success','Login Successful')
             next();
         }
         else{

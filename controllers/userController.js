@@ -27,7 +27,7 @@ const signup = async(req,res) => {
             password:hashPassword,
             userName:userName
         });
-
+        req.flash('success','Registered Successfully!')
         res.redirect('/login');
 
     }
@@ -44,22 +44,34 @@ const login = async (req,res) => {
     try{
         const existingUser = await userModel.findOne({email:email});
         if(!existingUser){
-            return res.status(400).json({message: "User not present"});
+            req.flash('error','User Not Found')
+            return res.redirect('/login')
+
         } 
 
         const matchPassword = await bcrypt.compare(password, existingUser.password);
         if(!matchPassword) {
-            return res.status(400).json({message: "Invalid Credentials"});
+            req.flash('error','Invalid Credentials')
+            return res.redirect('/login')
         }
         const token = jwt.sign({email:existingUser.email, id:existingUser._id}, SECRET_KEY);
         // res.status(201).json({user: existingUser, token:token});
         res.cookie('jwt',token, { maxAge: 864000000 });
-        res.redirect('/complaint');
+        req.flash('success','Welcome Back!')
+        res.redirect('/home');
 
     }
     catch(err){
         console.log(err);
-        res.status(500).json({message: "Server error"});
+        req.flash('error','Server Error')
+        return res.redirect('/login')
     }
 }
-module.exports = {signup,login};
+
+const logout = (req,res) => {
+    res.cookie('jwt', '', { maxAge: 1 })
+    req.flash('warning','Sayonara!')
+    res.redirect('/login')
+}
+
+module.exports = {signup,login,logout};

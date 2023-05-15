@@ -89,6 +89,7 @@ app.get("/signup", function(req,res) {
 });
 
 app.post("/login", userController.login);
+app.get("/logout", userController.logout);
 
 app.get("/complaint",auth, function(req,res) {
   res.render("complaint");
@@ -121,7 +122,7 @@ app.get("/crime",auth, async (req, res) => {
 
   const Cluster = require('./models/cluster');
 
-  app.get("/cluster", async (req,res) => {
+  app.get("/cluster",auth, async (req,res) => {
     try {
       let crime_type = req.query.crime || "murder";
       let clusterpath = path.join(__dirname, 'clusters');
@@ -229,7 +230,7 @@ app.get("/crime",auth, async (req, res) => {
     return res;
   }
 
-  app.get("/predict", async(req,res)=>{
+  app.get("/predict",auth, async(req,res)=>{
     try{
       var list_type = req.query.crimetype;
       var state = req.query.state;
