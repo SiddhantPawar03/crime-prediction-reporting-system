@@ -16,6 +16,7 @@ const expressLayouts = require('express-ejs-layouts');
 const { auth, isLogedIn } = require('./middlewares/auth');
 const Crime = require('./models/complaint')
 const IPCData = require('./public/data/ipc')
+const SLLData = require('./public/data/sll')
 const dbUrl = process.env.MONGODB_URL || 'mongodb://localhost:27017/crimeDB'
 const secret = process.env.SECRET_KEY || "EDI@50";
 const flaskUrl = process.env.FLASK_SERVER
@@ -232,9 +233,18 @@ function getDateValue(arr) {
   return res;
 }
 
-const findValues = state => {
+const findValuesIPC = state => {
   var reports = []
   IPCData.forEach(report => {
+    if (report.State == state){
+      reports = report.reports
+    }
+  })
+  return reports
+}
+const findValuesSLL = state => {
+  var reports = []
+  SLLData.forEach(report => {
     if (report.State == state){
       reports = report.reports
     }
@@ -250,14 +260,9 @@ app.get("/predict", auth, async (req, res) => {
     var model = list_type + state;
     staticData = []
     if (list_type === "i") {
-      staticData = findValues(state_name)
+      staticData = findValuesIPC(state_name)
     } else {
-      var sllValue = await Sll.find({ State: state_name });
-      var ars = [];
-      ars = getValues(sllValue);
-      var finalArs = [];
-      finalArs = getDateValue(ars);
-      console.log(finalArs);
+      staticData = findValuesSLL(state_name)
     }
     
     const resp = await axios.get(`${flaskUrl}/getData?model=${model || 'iap'}`)
