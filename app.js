@@ -251,7 +251,22 @@ app.get("/crime",auth, async (req, res) => {
         finalArs = getDateValue(ars);
         console.log(finalArs);
       }
-      res.render("predict",{'state':state});
+      labels = []
+      staticData = []
+      predictedData = []
+      for(var i=0;i<21;i++){
+        labels[i] = `${2003 + i}`
+      }
+      for(var i=0;i<18;i++){
+        staticData[i] = 2*i +20
+        predictedData[i] = 0
+      }
+      for(var i=0;i<3;i++){
+        staticData[18+i] = 0
+        predictedData[18+i] = 3*i
+      }
+
+      res.render("predict",{labels,staticData,predictedData});
     }
     catch(err){
       console.log(err);
