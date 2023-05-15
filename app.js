@@ -15,7 +15,7 @@ const complaintController = require('./controllers/complaintController');
 const expressLayouts = require('express-ejs-layouts');
 const { auth, isLogedIn } = require('./middlewares/auth');
 const Crime = require('./models/complaint')
-
+const IPCData = require('./public/data/ipc')
 const dbUrl = process.env.MONGODB_URL || 'mongodb://localhost:27017/crimeDB'
 const secret = process.env.SECRET_KEY || "EDI@50";
 const flaskUrl = process.env.FLASK_SERVER
@@ -232,19 +232,25 @@ function getDateValue(arr) {
   return res;
 }
 
+const findValues = state => {
+  var reports = []
+  IPCData.forEach(report => {
+    if (report.State == state){
+      reports = report.reports
+    }
+  })
+  return reports
+}
+
 app.get("/predict", auth, async (req, res) => {
   try {
-    var list_type = req.query.crimetype;
-    var state = req.query.state;
+    var list_type = req.query.crimetype || 'i';
+    var state = req.query.state || 'ap';
     var state_name = findKey(state);
     var model = list_type + state;
+    staticData = []
     if (list_type === "i") {
-      var ipcValue = await Ipc.find({ State: state_name });
-      var ari = [];
-      ari = getValues(ipcValue);
-      var finalAri = [];
-      finalAri = getDateValue(ari);
-      console.log(finalAri);
+      staticData = findValues(state_name)
     } else {
       var sllValue = await Sll.find({ State: state_name });
       var ars = [];
@@ -255,19 +261,16 @@ app.get("/predict", auth, async (req, res) => {
     }
     
     const resp = await axios.get(`${flaskUrl}/getData?model=${model || 'iap'}`)
-    console.log(resp.data)
     labels = []
-    staticData = []
     predictedData = []
     for (var i = 0; i < 21; i++) {
       labels[i] = `${2003 + i}`
     }
     for (var i = 0; i < 18; i++) {
-      staticData[i] = 2 * i + 20
       predictedData[i] = 0
     }
     for (var i = 0; i < 3; i++) {
-      staticData[18 + i] = 0
+      staticData[18 + i ] = 0
       predictedData[18 + i] = resp.data[2021+i]
     }
 
