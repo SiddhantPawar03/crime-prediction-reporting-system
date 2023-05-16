@@ -1,4 +1,4 @@
-# Project Title - Crime Prediction & Reporting Portal 
+# Crime Prediction & Reporting Portal 
 
 # Aim:
  ```
