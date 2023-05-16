@@ -1,0 +1,35 @@
+<% layout('/layouts/boilerplate') %>
+
+<h1>All Complaints</h1>
+<% for(let crime of item){ %>
+    <div class="card m-4">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <div class="card-body ">
+                    <h3 class="card-title">
+                        Complaint by <%= crime.fullName %> for <%= crime.complaintType.toUpperCase() %>
+                    </h3>
+                    <p class="card-text fs-6">
+                        Complaint: <%= crime.complaint %>
+                    </p>
+                    <p class="class-text text-muted fs-7">
+                        Location: (<%= crime.district %>) <%= crime.address %>
+                    </p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card-body ">
+                    <p class="card-text fs-7">
+                        Crime Occured on <%= crime.crimeDate %>
+                    </p>
+                    <p class="class-text text-muted fs-9">
+                        Complaint Filed on <%= crime.createdAt %>
+                    </p>
+                    <p class="class-text text-muted fs-9">
+                        <a href="mailto:<%= crime.email %>"><%= crime.email %></a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% } %>

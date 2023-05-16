@@ -4,225 +4,290 @@ const ejsMate = require('ejs-mate')
 const path = require('path')
 const _ = require('lodash');
 const mongoose = require('mongoose');
+const session = require('express-session')
 const { forEach } = require('lodash');
+const flash = require('connect-flash')
+const MongoStore = require('connect-mongo');
+const cookieParser = require('cookie-parser');
+const axios = require('axios');
+const userController = require('./controllers/userController');
+const complaintController = require('./controllers/complaintController');
+const expressLayouts = require('express-ejs-layouts');
+const { auth, isLogedIn } = require('./middlewares/auth');
+const Crime = require('./models/complaint')
+const IPCData = require('./public/data/ipc')
+const SLLData = require('./public/data/sll')
+const dbUrl = process.env.MONGODB_URL || 'mongodb://localhost:27017/crimeDB'
+const secret = process.env.SECRET_KEY || "EDI@50";
+const flaskUrl = process.env.FLASK_SERVER
 require('dotenv').config();
 
 const app = express();
 
-app.engine('ejs',ejsMate)
-app.set('view engine','ejs')
-app.set('views',path.join(__dirname,'views'))
+const store = MongoStore.create({
+  mongoUrl: dbUrl,
+  secret,
+  touchAfter: 24 * 60 * 60
+})
+store.on('error', e => {
+  console.log('Session Error!!!', e)
+})
+
+app.engine('ejs', ejsMate);
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 app.set('views', './views');
 app.set('view engine', 'ejs');
 
-app.use(bodyParser.urlencoded({extended:true}));
+const sessionConfig = {
+  store,
+  name: 'YelpCampSession',
+  secret,
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,  //just a extra layer of security to avoid client site req / cross-plaform req
+    // secure: true,        //how extra security (sends no cookies for local host as well)
+    expires: Date.now() + (1000 * 60 * 60 * 24 * 7),     //expires after 1 week of creation
+    maxAge: (1000 * 60 * 60 * 24 * 7)
+  }
+}
+app.use(session(sessionConfig))
+app.use(flash())
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
-
-mongoose.connect(process.env.MONGODB_URL, {useNewUrlParser: true});
-
-
-const crimeSchema = {
-    id: Number,
-    date: String,
-    day: String,
-    time: String,
-    district: String,
-    address: String,
-    complaint_type: String,
-    complaint: String,
-    xcoord: Number,
-    ycoord: Number
-};
-
-const Crime = mongoose.model("complaints", crimeSchema);
-
-
-app.get("/", function(req,res) {
-    res.render("home");
+app.use(express.json());
+app.use(cookieParser());
+app.use((req, res, next) => {
+  next();
 });
 
-app.get("/dashboard", function(req,res) {
-    res.render("dashboard");
+mongoose.connect(dbUrl, { useNewUrlParser: true })
+  .then(data => console.log("Database connected"))
+  .catch(err => console.log("Database connection failed"));
+
+
+//middleware for flashing all msg
+app.use((req, res, next) => {
+  res.locals.currentUser = isLogedIn(req)
+  res.locals.success = req.flash('success')       //this will send success to all the rendering requests
+  res.locals.warning = req.flash('warning')
+  res.locals.error = req.flash('error')
+  next()
 })
 
-app.get("/complaint", function(req,res) {
-    res.render("complaint");
+
+app.get("/", function (req, res) {
+  res.render("home");
 });
 
-app.post("/complaint", function(req,res) {
-  function getTime() {
-    var date = new Date();
-    var currentTime = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-    return currentTime;
-  }
-
-  function getday() {
-    var currentdate = req.body.date;
-    const dt = new Date(currentdate);
-    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday","Friday","Saturday"];
-    var currentday = dt.getDay();
-    currentday = dayNames[currentday];
-    return currentday;
-  }
-
-  function lat(position) {
-    const latitude = position.coords.latitude;
-     return latitude;
-  }
-
-  function lon(position) {
-    const longitude = position.coords.longitude;
-    return longitude;
-  }
- 
-  function findCoords() {
-    const apiKey = process.env.MAP_API;
-    console.log(apiKey);
-  }
-
-    const complaint = new Crime({
-        date: req.body.date,
-        time: getTime(),
-        day: getday(),
-        district: req.body.district,
-        address: req.body.address,
-        xcoord: req.body.xcoord,
-        ycoord: req.body.ycoord
-    });
-    findCoords();
-    complaint.save(function(err) {
-        if(!err) {
-            res.redirect("/complaint");
-        }
-    });
+app.get("/login", function (req, res) {
+  res.render("login");
 });
 
+app.post("/signup", userController.signup);
 
+app.get("/signup", function (req, res) {
+  res.render("signup");
+});
 
+app.post("/login", userController.login);
+app.get("/logout", userController.logout);
 
-app.get("/viewcrime", async (req, res) => {
-    try {
-      const details = await Crime.find();
-      console.log('start')
-      console.log(details);
-      console.log('end')
-    //   res.send(articles);
-      res.render("viewcrime", {listTitle: "Crime Report", 'item': details});
-    } catch (err) {
-      console.log(err);
-    }
-  });
+app.get("/complaint", auth, function (req, res) {
+  res.render("complaint");
+});
 
-  app.get("/", function(req, res){
+app.post('/complaint', auth, complaintController.createComplaint);
 
-    Post.find({}, function(err, posts){
-      res.render("home", {
-        startingContent: homeStartingContent,
-        posts: posts
-        });
-    });
-  });
-
-  const reportSchema = {
-    date: String,
-    Category: String,
-    Descript: String,
-    DayOfWeek: String,
-    PdDistrict: String,
-    Resolution: String,
-    Address: String,
-    X: String,
-    Y: String
-};
-
-  const Report = mongoose.model("reports", reportSchema);
-app.get("/viewreport", async (req, res) => {
-  // function searchResults(reports) {
-  //     var search = req.body.report;
-  //     // console.log(report);
-  //     // var s1 = search.toString();
-  //     // var s2 = s1.toLowerCase();
-  //     console.log(search);
-  //     // var myCursor = report.reports.find( );
-  //     // myCursor.forEach(printjson);
-  //     console.log(Report.reports.find({"Category": {search }})) ;
-  // }
+app.get("/crime", auth, async (req, res) => {
   try {
-    const search = req.query.report;
-    // if(search === null || search === undefined){
-    //   search = "WARRANTS";
-    // }
-    // var search = "WARRANTS";
-    // search = String(search);
-    console.log(search);
-    const report = await Report.find({Category:search},{},{limit: 40});
-  //   res.send(articles);searchResults();    
-  // searchResults(report);
-res.render("viewreport", {'item': report});
-
-    console.log(report);
+    const details = await Crime.find();
+    console.log('start')
+    console.log(details);
+    console.log('end')
+    //   res.send(articles);
+    res.render("crime", { listTitle: "Crime Report", 'item': details });
   } catch (err) {
     console.log(err);
   }
 });
 
-app.post("/viewreport", function(req,res) {
-  const search = req.body.report;
-  console.log(search);
-  res.redirect("/viewreport");
+app.get("/", function (req, res) {
+
+  Post.find({}, function (err, posts) {
+    res.render("home", {
+      startingContent: homeStartingContent,
+      posts: posts
+    });
+  });
 });
 
-const clusterSchema = {
-  state: String,
-  murder: String,
-  dowry : String,
-  suicide: String,
-  humantrafficiking: String,
-  blackmailing: String,
-  robbery: String,
-  coordinates: String,
-  latitude: String,
-  longitude: String
-};
+const Cluster = require('./models/cluster');
 
-const Cluster = mongoose.model("clusters", clusterSchema);
-
-
-app.get("/viewcluster", async (req,res) => {
+app.get("/cluster", auth, async (req, res) => {
   try {
-    const crime_type = req.query.crime;
-    // console.log(typeof(crime_type));
-    const cluster = await Cluster.find({});
+    let crime_type = req.query.crime || "murder";
+    let clusterpath = path.join(__dirname, 'clusters');
+    // res.render(`${clusterpath}/${crime_type}.ejs`);
+    // res.render(`${clusterpath}/murder.ejs`);
+    // const cluster = await Cluster.find({});
     // console.log(cluster);
-res.render("viewcluster", {'item': cluster,'crimetp':crime_type});
+    // crime_type = dummy;
+    // res.render("cluster");
+    console.log(crime_type);
+    // res.redirect("map");  
+    res.render(`./clusters/${crime_type}.ejs`);
   }
   catch (err) {
     console.log(err);
   }
 });
 
-const predictSchema = {
-  State: String,
-  reports : [String]
-};
+// app.get("/cluster", getVal, renderForm);
 
-const Predict = mongoose.model("predicts", predictSchema);
+// function getVal(req, res, next) {
+//    // Code here
+//    res.locals.savedPayees = req.query.crime;
+//    next();
+// };
 
-app.get("/predict", async(req,res)=>{
-  try{
-    const list_type = req.query.crimetype;
-    const state = req.query.state;
-    // console.log(list_type);
-    console.log(state);
-    const values = await Predict.find({State: state});
-    console.log(values);
-    res.render("predict",{'item':values,'state':state});
+// function renderForm(req, res) {
+//   res.render("cluster", {'crime': req.query.crime});
+// };
+
+const Ipc = require('./models/ipc');
+const Sll = require('./models/sll');
+const Predict = require('./models/predict');
+
+
+var table = new Object();
+
+
+table['ap'] = 'Andhra Pradesh';
+table['ar'] = 'Arunachal Pradesh';
+table['as'] = 'Assam';
+table['br'] = 'Bihar';
+table['cg'] = 'Chhattisgarh';
+table['ga'] = 'Goa';
+table['gj'] = 'Gujarat';
+table['hr'] = 'Haryana';
+table['hp'] = 'Himachal Pradesh';
+table['jk'] = 'Jammu and Kashmir';
+table['jh'] = 'Jharkhand';
+table['ka'] = 'Karnataka';
+table['kl'] = 'Kerala';
+table['mp'] = 'Madhya Pradesh';
+table['mh'] = 'Maharashtra';
+table['mn'] = 'Manipur';
+table['ml'] = 'Meghalaya';
+table['mz'] = 'Mizoram';
+table['nl'] = 'Nagaland';
+table['od'] = 'Odisha';
+table['pb'] = 'Punjab';
+table['rj'] = 'Rajasthan';
+table['sk'] = 'Sikkim';
+table['tn'] = 'Tamil Nadu';
+table['tr'] = 'Tripura';
+table['up'] = 'Uttar Pradesh';
+table['uk'] = 'Uttarakhand';
+table['wb'] = 'West Bengal';
+table['ts'] = 'Telangana';
+table['an'] = 'Andaman & Nicobar Islands';
+table['ch'] = 'Chandigarh';
+table['dn'] = 'Dadar and Nagar Haveli';
+table['dd'] = 'Daman and Diu';
+table['ld'] = 'Lakshadweep';
+table['dl'] = 'Delhi';
+table['py'] = 'Puducherry';
+
+
+function findKey(state) {
+  for (var key in table) {
+    if (table.hasOwnProperty(state)) {
+      console.log('key is: ' + key + ', value is: ' + table[key]);
+      return table[state];
+    }
   }
-  catch(err){
+}
+
+function getValues(item) {
+  var arr = [];
+  item.forEach(function (items) {
+    items.reports.forEach(function (report) {
+      // console.log(report);
+      arr.push(report);
+    })
+  })
+  return arr;
+}
+
+function getDateValue(arr) {
+  const datearr = ['2003-01-01', '2004-01-01', '2005-01-01', '2006-01-01', '2007-01-01', '2008-01-01', '2009-01-01', '2010-01-01', '2011-01-01', '2012-01-01', '2013-01-01', '2014-01-01', '2015-01-01', '2016-01-01', '2017-01-01', '2018-01-01', '2019-01-01', '2020-01-01'];
+  var res = [];
+  var dict = {};
+  for (var i = 0; i < arr.length; i++) {
+    dict[datearr[i]] = arr[i];
+    res.push(dict);
+  }
+  return res;
+}
+
+const findValuesIPC = state => {
+  var reports = []
+  IPCData.forEach(report => {
+    if (report.State == state){
+      reports = report.reports
+    }
+  })
+  return reports
+}
+const findValuesSLL = state => {
+  var reports = []
+  SLLData.forEach(report => {
+    if (report.State == state){
+      reports = report.reports
+    }
+  })
+  return reports
+}
+
+app.get("/predict", auth, async (req, res) => {
+  try {
+    var list_type = req.query.crimetype || 'i';
+    var state = req.query.state || 'ap';
+    var state_name = findKey(state);
+    var model = list_type + state;
+    staticData = []
+    if (list_type === "i") {
+      staticData = findValuesIPC(state_name)
+    } else {
+      staticData = findValuesSLL(state_name)
+    }
+    
+    const resp = await axios.get(`${flaskUrl}/getData?model=${model || 'iap'}`)
+    labels = []
+    predictedData = []
+    for (var i = 0; i < 21; i++) {
+      labels[i] = `${2003 + i}`
+    }
+    for (var i = 0; i < 18; i++) {
+      predictedData[i] = 0
+    }
+    for (var i = 0; i < 3; i++) {
+      staticData[18 + i ] = 0
+      predictedData[18 + i] = resp.data[2021+i]
+    }
+
+    res.render("predict", { labels, staticData, predictedData });
+  }
+  catch (err) {
     console.log(err);
   }
 });
 
-app.listen(process.env.PORT || 3000, function() {
-   console.log("Server listening on Port 3000!"); 
+
+
+app.listen(process.env.PORT || 3000, function () {
+  console.log("Server listening on Port 3000!");
 });
