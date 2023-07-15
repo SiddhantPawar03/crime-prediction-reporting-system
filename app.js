@@ -70,7 +70,7 @@ mongoose.connect(dbUrl, { useNewUrlParser: true })
 //middleware for flashing all msg
 app.use((req, res, next) => {
   res.locals.currentUser = isLogedIn(req)
-  res.locals.success = req.flash('success')       //this will send success to all the rendering requests
+  res.locals.success = req.flash('success')       
   res.locals.warning = req.flash('warning')
   res.locals.error = req.flash('error')
   next()
@@ -103,10 +103,6 @@ app.post('/complaint', auth, complaintController.createComplaint);
 app.get("/crime", auth, async (req, res) => {
   try {
     const details = await Crime.find();
-    console.log('start')
-    console.log(details);
-    console.log('end')
-    //   res.send(articles);
     res.render("crime", { listTitle: "Crime Report", 'item': details });
   } catch (err) {
     console.log(err);
@@ -129,32 +125,12 @@ app.get("/cluster", auth, async (req, res) => {
   try {
     let crime_type = req.query.crime || "murder";
     let clusterpath = path.join(__dirname, 'clusters');
-    // res.render(`${clusterpath}/${crime_type}.ejs`);
-    // res.render(`${clusterpath}/murder.ejs`);
-    // const cluster = await Cluster.find({});
-    // console.log(cluster);
-    // crime_type = dummy;
-    // res.render("cluster");
-    console.log(crime_type);
-    // res.redirect("map");  
     res.render(`./clusters/${crime_type}.ejs`);
   }
   catch (err) {
     console.log(err);
   }
 });
-
-// app.get("/cluster", getVal, renderForm);
-
-// function getVal(req, res, next) {
-//    // Code here
-//    res.locals.savedPayees = req.query.crime;
-//    next();
-// };
-
-// function renderForm(req, res) {
-//   res.render("cluster", {'crime': req.query.crime});
-// };
 
 const Ipc = require('./models/ipc');
 const Sll = require('./models/sll');
@@ -215,7 +191,6 @@ function getValues(item) {
   var arr = [];
   item.forEach(function (items) {
     items.reports.forEach(function (report) {
-      // console.log(report);
       arr.push(report);
     })
   })

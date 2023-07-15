@@ -1,8 +1,6 @@
 const complaintModel = require('../models/complaint');
 
 const createComplaint = async (req,res) => {
-    // const {fullName, email,crimeDate, district, address, complaintType, complaint} = req.body;
-    console.log(req.userId);
     const newComplaint = new complaintModel({
         fullName: req.body.fullName,
         email: req.body.email,
@@ -15,7 +13,6 @@ const createComplaint = async (req,res) => {
 
     try{
         await newComplaint.save();
-        // res.status(201).json(newComplaint);
         return res.redirect('/');
     } catch(err) {
         console.log(err);

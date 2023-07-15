@@ -5,19 +5,10 @@ require('dotenv').config();
 const SECRET_KEY = process.env.SECRET_KEY;
 
 const signup = async(req,res) => {
-    //Checking for existing user
-
-    //Hashed password
-
-    //User creation
-
-    //Token creation
-
     try {
         const {userName, email, password} = req.body;
         const existingUser = await userModel.findOne({email:email});
         if(existingUser){
-            // res.status(400).json({message: "User already exists"});
             return res.redirect('/signup');
         }
         const hashPassword = await bcrypt.hash(password, 10);
@@ -55,7 +46,6 @@ const login = async (req,res) => {
             return res.redirect('/login')
         }
         const token = jwt.sign({email:existingUser.email, id:existingUser._id}, SECRET_KEY);
-        // res.status(201).json({user: existingUser, token:token});
         res.cookie('jwt',token, { maxAge: 864000000 });
         req.flash('success','Welcome Back!')
         res.redirect('/');
