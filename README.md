@@ -11,6 +11,11 @@ Develop a website which would assist to file complaints & predict upcoming crime
 - Get Cluster Map of various crimes in India.
 - Predict upcoming crime rate for respective States & Union Territory based on Indian Penal Code (IPC) & Special & Local Laws (SLL).
 
+# Flask Server
+```
+To run flask server inorder to view prediction usage built via machine learning algorithm, please head to https://github.com/SiddhantPawar03/crime-prediction-flask-server
+```
+
 # System Architecture
 ![Flowchart-Final](https://github.com/SiddhantPawar03/crime-prediction-reporting-system/assets/85052056/685e538c-c53d-4146-81d4-fcbdeeb2be97)
 
