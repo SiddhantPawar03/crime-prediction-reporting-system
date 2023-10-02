@@ -15,6 +15,12 @@ Develop a website which would assist to file complaints & predict upcoming crime
 ```
 To run flask server inorder to view prediction usage built via machine learning algorithm, please head to https://github.com/SiddhantPawar03/crime-prediction-flask-server
 ```
+# Setup
+- ```git clone https://github.com/SiddhantPawar03/crime-prediction-reporting-system``` 
+- ```cd crime-prediction-reporting-system```
+- ```npm install```
+- Create a ```.env``` file
+- ```npm run```
 
 # System Architecture
 ![Flowchart-Final](https://github.com/SiddhantPawar03/crime-prediction-reporting-system/assets/85052056/685e538c-c53d-4146-81d4-fcbdeeb2be97)
